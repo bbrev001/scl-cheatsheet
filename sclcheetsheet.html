@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Siemens SCL Reference | SS Automation &amp; Controls</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg1:#0a0a0f;--bg2:#12121a;--bg3:#1a1a26;--bgc:#16161f;--t1:#e8e8f0;--t2:#9898a8;--t3:#5c5c6a;--ac:#00b4a0;--bd:#2a2a3a;--code:#0d0d14}
+.light{--bg1:#fafafa;--bg2:#fff;--bg3:#f4f4f8;--bgc:#fff;--t1:#1a1a2e;--t2:#5c5c6a;--t3:#9898a8;--bd:#e4e4ec;--code:#f4f4f8}
+body{font-family:'Inter',-apple-system,system-ui,sans-serif;background:var(--bg1);color:var(--t1);min-height:100vh}
+header{background:var(--bg2);border-bottom:1px solid var(--bd);padding:16px 24px;position:sticky;top:0;z-index:100}
+.hdr-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:12px}
+.logo{display:flex;align-items:center;gap:12px}
+.logo-box{width:48px;height:48px;background:var(--ac);border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:monospace;font-weight:700;font-size:14px;color:#fff}
+.logo h1{font-size:22px;font-weight:700}
+.logo span{font-size:11px;color:var(--t2)}
+.ctrls{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.search{width:200px;background:var(--bg3);border:1px solid var(--bd);border-radius:8px;padding:10px 14px;font-size:13px;color:var(--t1);font-family:monospace;outline:none}
+.btn{background:var(--bg3);border:1px solid var(--bd);border-radius:8px;padding:8px 14px;cursor:pointer;font-size:13px;color:var(--t2)}
+.btn:hover{border-color:var(--ac)}
+.btn.active{background:rgba(0,180,160,.15);color:var(--ac)}
+.tabs{display:flex;gap:4px;margin-bottom:10px;flex-wrap:wrap}
+.tab{background:transparent;border:none;padding:8px 16px;cursor:pointer;font-size:13px;font-weight:600;border-radius:6px;color:var(--t2)}
+.tab.active{background:rgba(0,180,160,.15);color:var(--ac)}
+.cats{display:flex;gap:4px;overflow-x:auto}
+.cat{background:transparent;border:1px solid transparent;border-radius:6px;padding:6px 12px;cursor:pointer;font-size:12px;font-weight:500;white-space:nowrap;color:var(--t2)}
+.cat.active{background:rgba(0,180,160,.15);border-color:var(--ac);color:var(--ac)}
+main{max-width:1400px;margin:0 auto;padding:24px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:14px}
+.card{background:var(--bgc);border:1px solid var(--bd);border-radius:12px;padding:16px;cursor:pointer;transition:border-color .2s}
+.card:hover{border-color:var(--ac)}
+.card-top{display:flex;justify-content:space-between;margin-bottom:10px}
+.badge{padding:3px 8px;border-radius:4px;font-size:10px;font-weight:600}
+.badge.beginner{background:rgba(0,212,170,.15);color:#00d4aa}
+.badge.intermediate{background:rgba(245,158,11,.15);color:#f59e0b}
+.badge.advanced{background:rgba(239,68,68,.15);color:#ef4444}
+.badge.ver{background:var(--bg3);color:var(--t3)}
+.bm-btn{background:transparent;border:none;cursor:pointer;font-size:16px;color:var(--t3)}
+.bm-btn.active{color:#f59e0b}
+.cmd-row{display:flex;justify-content:space-between;gap:10px;margin-bottom:8px}
+.cmd{font-family:monospace;font-size:13px;font-weight:600;color:var(--ac);background:var(--code);padding:8px 12px;border-radius:6px;flex:1}
+.copy-btn{background:var(--bg3);border:1px solid var(--bd);border-radius:6px;width:32px;height:32px;cursor:pointer;color:var(--t3);font-size:14px;display:flex;align-items:center;justify-content:center}
+.copy-btn.copied{background:#00d4aa;color:#000}
+.card p{color:var(--t2);font-size:13px;margin-bottom:10px}
+pre{background:var(--code);border-radius:8px;padding:12px;font-family:monospace;font-size:11px;color:var(--t2);white-space:pre-wrap;margin:0;overflow-x:auto}
+.section-hdr{display:flex;align-items:center;gap:10px;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--bd)}
+.section-hdr h2{font-size:16px;font-weight:600}
+.count{background:var(--bg3);border-radius:10px;padding:3px 8px;font-size:11px;color:var(--t3)}
+/* Panel */
+.overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.75);z-index:1000;display:flex;justify-content:flex-end}
+.panel{width:100%;max-width:600px;background:var(--bg2);height:100vh;overflow-y:auto;padding:28px;position:relative}
+.panel-close{position:absolute;top:20px;right:20px;background:var(--bg3);border:1px solid var(--bd);border-radius:8px;width:40px;height:40px;cursor:pointer;font-size:20px;color:var(--t2)}
+.panel h3.sec{font-size:11px;font-weight:600;color:#00d4aa;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+.panel .ex-row{background:var(--code);border-radius:6px;padding:10px 12px;margin-bottom:6px;display:flex;justify-content:space-between}
+.panel .ex-row code{font-family:monospace;font-size:12px;color:var(--t1)}
+.panel .ex-row span{font-size:11px;color:var(--t3)}
+.gotcha{padding:10px 12px;background:rgba(245,158,11,.1);border-left:3px solid #f59e0b;border-radius:0 6px 6px 0;margin-bottom:6px;font-size:12px}
+.rel-tag{background:var(--bg3);border:1px solid var(--bd);border-radius:4px;padding:4px 10px;font-size:11px;font-family:monospace;color:var(--t2);display:inline-block;margin:0 4px 4px 0}
+/* Comparison */
+.comp-card{background:var(--bgc);border:1px solid var(--bd);border-radius:12px;padding:20px;margin-bottom:24px}
+.comp-card h3{font-size:18px;margin-bottom:6px}
+.comp-tbl{background:var(--code);border-radius:8px;overflow:hidden;margin-bottom:14px}
+.comp-hdr{display:grid;background:var(--bg3);font-weight:600;font-size:12px}
+.comp-row{display:grid;border-top:1px solid var(--bd)}
+.comp-row span,.comp-hdr span{padding:10px 12px;font-size:12px}
+.tip-box{background:rgba(0,212,170,.1);border-left:3px solid #00d4aa;padding:10px 14px;border-radius:0 8px 8px 0;font-size:13px;margin-bottom:14px}
+/* Anti-pattern */
+.ap-card{background:var(--bgc);border:1px solid var(--bd);border-radius:12px;padding:20px;margin-bottom:20px}
+.ap-card.high{border-left:4px solid #ef4444}
+.ap-card.medium{border-left:4px solid #f59e0b}
+.ap-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.ap-block{background:var(--code);border-radius:8px;overflow:hidden}
+.ap-label{padding:8px 12px;font-size:11px;font-weight:600}
+.ap-label.bad{background:rgba(239,68,68,.15);color:#ef4444}
+.ap-label.good{background:rgba(0,212,170,.15);color:#00d4aa}
+/* Pattern */
+.pat-card{background:var(--bgc);border:1px solid var(--bd);border-radius:12px;padding:20px;margin-bottom:20px}
+.pat-hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
+.pat-cat{padding:4px 10px;border-radius:4px;font-size:11px;font-weight:600;background:rgba(0,180,160,.15);color:var(--ac)}
+.code-block{background:var(--code);border-radius:8px;overflow:hidden;margin-bottom:12px}
+.code-top{display:flex;justify-content:space-between;padding:8px 12px;background:var(--bg3);border-bottom:1px solid var(--bd)}
+.code-top span{font-size:11px;font-weight:600;color:var(--ac)}
+.usage-box{background:var(--bg3);border-radius:6px;padding:10px 12px}
+.usage-box span{font-size:10px;font-weight:600;color:var(--t3);display:block;margin-bottom:4px}
+.usage-box code{font-family:monospace;font-size:11px;color:var(--t1)}
+/* Learning */
+.lp-card{background:var(--bgc);border:1px solid var(--bd);border-radius:12px;padding:20px;cursor:pointer;margin-bottom:16px;transition:border-color .2s}
+.lp-card.active{border-color:var(--ac)}
+.lp-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.lp-top h3{font-size:18px}
+.lp-expand{margin-top:16px;padding-top:16px;border-top:1px solid var(--bd)}
+.tips-box{background:var(--code);border-radius:8px;padding:14px;margin-bottom:16px}
+.tips-box h4{font-size:12px;font-weight:600;margin-bottom:10px;color:var(--ac)}
+.tips-box li{padding:6px 0;font-size:12px;color:var(--t2);list-style:none;border-bottom:1px solid var(--bd)}
+.tips-box li:last-child{border-bottom:none}
+.topic-btn{display:flex;align-items:center;gap:10px;width:100%;background:var(--bg3);border:1px solid var(--bd);border-radius:8px;padding:10px 14px;margin-bottom:8px;cursor:pointer;font-family:monospace;font-size:12px;color:var(--t1);text-align:left}
+.topic-num{background:var(--ac);color:#000;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:11px;flex-shrink:0}
+/* Standards */
+.std-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.std-card{background:var(--bgc);border:1px solid var(--bd);border-radius:10px;padding:16px}
+.std-card code.pat{font-family:monospace;font-size:15px;font-weight:600;color:var(--ac);display:block;margin-bottom:6px}
+.std-card p{color:var(--t2);font-size:12px;margin-bottom:10px}
+.std-card code.ex{background:var(--code);border-radius:6px;padding:10px;font-size:11px;color:var(--t3);display:block}
+.bp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
+.bp-card{background:var(--bgc);border:1px solid var(--bd);border-radius:10px;padding:16px}
+.bp-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.bp-do{background:rgba(0,212,170,.15);color:#00d4aa;padding:3px 8px;border-radius:4px;font-size:10px;font-weight:600}
+.bp-not{background:rgba(239,68,68,.15);color:#ef4444;padding:3px 8px;border-radius:4px;font-size:10px;font-weight:600}
+footer{text-align:center;padding:24px;color:var(--t3);font-size:11px;border-top:1px solid var(--bd);margin-top:32px}
+footer a{color:var(--ac);text-decoration:none}
+.cat-label{color:var(--t3);font-size:9px;background:var(--bg3);border-radius:4px;padding:2px 6px;display:inline-block;margin-bottom:6px}
+.hidden{display:none}
+.sev{padding:4px 10px;border-radius:4px;font-size:11px;font-weight:600}
+.sev.high{background:rgba(239,68,68,.15);color:#ef4444}
+.sev.medium{background:rgba(245,158,11,.15);color:#f59e0b}
+.info-bar{color:var(--t2);font-size:13px;padding:12px 16px;background:var(--bg3);border-radius:8px;border-left:3px solid var(--ac);margin-bottom:20px}
+@media(max-width:800px){.grid{grid-template-columns:1fr}.ap-grid{grid-template-columns:1fr}.search{width:140px}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+// === DATA ===
+const D={quickRef:{variables:{title:"Variables & Data Types",icon:"◈",items:[{id:"elementary-types",cmd:"BOOL, INT, REAL, etc.",desc:"Elementary data types",difficulty:"beginner",version:"TIA",example:"VAR\n  bStart : BOOL := FALSE;\n  nCounter : INT := 0;\n  rTemperature : REAL := 25.0;\n  sName : STRING[32] := 'Motor_01';\nEND_VAR",detail:{what:"Basic data types for storing values. BOOL for bits, INT for integers, REAL for decimals, STRING for text.",why:"Foundation of all PLC programming. Choose appropriate type for memory efficiency and precision.",how:"Declare in VAR blocks with optional initialization. Type determines memory size and operations.",examples:[{code:"bFlag : BOOL := TRUE;",note:"Boolean (1 bit)"},{code:"nValue : INT := 100;",note:"Integer (-32768 to 32767)"},{code:"rTemp : REAL := 98.6;",note:"Float (32-bit)"},{code:"dwMask : DWORD := 16#FF00;",note:"Double word (hex)"}],gotchas:["INT is 16-bit in S7, not 32-bit like most languages","REAL has limited precision - don't compare with =","STRING length must be specified [1..254]"],related:["DINT","LREAL","WSTRING","Arrays"]}},{id:"complex-types",cmd:"ARRAY, STRUCT, UDT",desc:"Complex data structures",difficulty:"intermediate",version:"TIA",example:"TYPE UDT_Motor\n  bRunning : BOOL;\n  rSpeed : REAL;\n  nFaultCode : INT;\nEND_TYPE\n\nVAR\n  aValues : ARRAY[0..9] OF INT;\n  stMotor : UDT_Motor;\nEND_VAR",detail:{what:"Structured data types for organizing related variables. ARRAYs for lists, STRUCTs/UDTs for grouped data.",why:"Organize complex data, create reusable type definitions, simplify parameter passing.",how:"Define UDTs in project types, use in declarations. Access with dot notation.",examples:[{code:"ARRAY[1..10] OF REAL",note:"Fixed-size array"},{code:"stMotor.rSpeed := 1500.0;",note:"Struct access"},{code:"aData[i] := nValue;",note:"Array indexing"}],gotchas:["Array indices start at declared lower bound, not always 0","UDTs must be defined before use","Nested structures can impact scan time"],related:["DB","Instance DB","Multi-instance"]}},{id:"var-sections",cmd:"VAR_INPUT, VAR_OUTPUT",desc:"Variable declaration sections",difficulty:"beginner",version:"TIA",example:"VAR_INPUT\n  bEnable : BOOL;\n  rSetpoint : REAL;\nEND_VAR\n\nVAR_OUTPUT\n  bDone : BOOL;\n  rActual : REAL;\nEND_VAR\n\nVAR_IN_OUT\n  stData : UDT_ProcessData;\nEND_VAR",detail:{what:"Sections that define how variables interface with the block. INPUT for incoming, OUTPUT for outgoing, IN_OUT for both.",why:"Create reusable function blocks with clear interfaces. Defines data flow direction.",how:"Declare in appropriate section. VAR_IN_OUT passes by reference (pointer).",examples:[{code:"VAR_INPUT",note:"Read-only from caller"},{code:"VAR_OUTPUT",note:"Write to caller"},{code:"VAR_IN_OUT",note:"Read/write (by reference)"},{code:"VAR_TEMP",note:"Temporary, not retained"},{code:"VAR_STAT",note:"Static, retained between calls"}],gotchas:["VAR_IN_OUT requires variable, not literal","VAR_TEMP lost after block execution","VAR_STAT uses instance DB memory"],related:["FB interface","FC parameters","Instance DB"]}},{id:"constants",cmd:"CONST / #region",desc:"Constants and literals",difficulty:"beginner",version:"TIA",example:"VAR CONSTANT\n  PI : REAL := 3.14159;\n  MAX_MOTORS : INT := 10;\n  TIMEOUT : TIME := T#5S;\nEND_VAR\n\n// Hex, binary, time literals\nnMask := 16#FF00;\nbPattern := 2#1010_1010;\ntDelay := T#2S500MS;",detail:{what:"Fixed values that cannot change during runtime. Literals for different number formats.",why:"Prevent accidental modification, improve readability, single point of change.",how:"Declare with CONSTANT keyword. Use prefixes for number bases.",examples:[{code:"16#FF",note:"Hexadecimal (255)"},{code:"2#1010",note:"Binary (10)"},{code:"T#1H30M",note:"Time (1.5 hours)"},{code:"DT#2024-01-15-12:30:00",note:"Date and time"}],gotchas:["Constants evaluated at compile time","Use underscores for readability: 16#FF_FF","TIME format: T#<days>D<hours>H<min>M<sec>S<ms>MS"],related:["Literals","TIME","DATE_AND_TIME"]}}]},blocks:{title:"Program Blocks",icon:"▣",items:[{id:"ob-blocks",cmd:"OB (Organization Block)",desc:"Main program and system events",difficulty:"beginner",version:"TIA",example:"// OB1 - Main Cycle\nFOR i := 0 TO 9 DO\n  IF aMotors[i].bEnable THEN\n    fb_Motor[i](bStart := TRUE);\n  END_IF;\nEND_FOR;\n\n// OB100 - Startup\nbFirstScan := TRUE;",detail:{what:"System-defined blocks called by the OS. OB1 is main cycle, others handle events, errors, interrupts.",why:"Entry points for your code. OS calls appropriate OB based on events.",how:"Create OB with specific number. OB1 runs cyclically, others on events.",examples:[{code:"OB1",note:"Main scan cycle"},{code:"OB100",note:"Startup (warm restart)"},{code:"OB35",note:"Cyclic interrupt (100ms)"},{code:"OB82",note:"Diagnostic interrupt"},{code:"OB121",note:"Programming error"}],gotchas:["OB1 execution time = scan time","OB100 runs once on startup","Missing error OB can cause CPU STOP"],related:["Scan cycle","Interrupts","Error handling"]}},{id:"fb-blocks",cmd:"FB (Function Block)",desc:"Reusable block with memory (instance)",difficulty:"intermediate",version:"TIA",example:"FUNCTION_BLOCK FB_Valve\nVAR_INPUT\n  bOpen : BOOL;\n  tTimeout : TIME := T#10S;\nEND_VAR\nVAR_OUTPUT\n  bOpened : BOOL;\n  bFault : BOOL;\nEND_VAR\nVAR\n  tonTimeout : TON;\nEND_VAR\n\ntonTimeout(IN := bOpen AND NOT bOpened,\n           PT := tTimeout);\nbFault := tonTimeout.Q;",detail:{what:"Reusable code block with its own memory (instance DB). Retains state between calls.",why:"Create reusable components like motor control, valve control. Each instance has own data.",how:"Define interface (IN/OUT), internal vars stored in instance DB. Call with instance reference.",examples:[{code:"fb_Motor(bStart := TRUE);",note:"Call with params"},{code:"fb_Motor.bRunning",note:"Access output"},{code:"fb_Motor.rSpeed := 1000.0;",note:"Set input"}],gotchas:["Each FB call needs unique instance DB","Multi-instance saves DB memory","VAR_STAT stored in instance DB"],related:["Instance DB","FC","Multi-instance"],interview:true}},{id:"fc-blocks",cmd:"FC (Function)",desc:"Reusable block without memory",difficulty:"beginner",version:"TIA",example:"FUNCTION FC_ScaleAnalog : REAL\nVAR_INPUT\n  nRaw : INT;\n  rMin : REAL;\n  rMax : REAL;\nEND_VAR\n\nFC_ScaleAnalog := (INT_TO_REAL(nRaw) / 27648.0)\n                  * (rMax - rMin) + rMin;",detail:{what:"Stateless function that computes a result. No instance data - same input always gives same output.",why:"Pure calculations, conversions, utilities. No memory overhead.",how:"Define inputs and return type. Assign result to function name.",examples:[{code:"rScaled := FC_Scale(nRaw, 0.0, 100.0);",note:"Call with return"},{code:"FC_Calculate := result;",note:"Set return value"}],gotchas:["No memory between calls - truly stateless","Return value assigned to function name","Use FB if you need to retain state"],related:["FB","FUNCTION","Return value"]}},{id:"db-blocks",cmd:"DB (Data Block)",desc:"Global and instance data storage",difficulty:"intermediate",version:"TIA",example:"DATA_BLOCK DB_Recipe\n  STRUCT\n    sName : STRING[32];\n    rTemp : REAL;\n    tMixTime : TIME;\n    aIngredients : ARRAY[1..10] OF REAL;\n  END_STRUCT\nBEGIN\n  sName := 'Default';\n  rTemp := 25.0;\nEND_DATA_BLOCK",detail:{what:"Storage for structured data. Global DBs for shared data, Instance DBs for FB memory.",why:"Organize process data, recipes, parameters. Accessible from anywhere in program.",how:"Define structure, access with DB_Name.Variable syntax. Can optimize for speed.",examples:[{code:"DB_Params.rSetpoint := 100.0;",note:"Write to DB"},{code:"rValue := DB_Recipe.aValues[1];",note:"Read from DB"}],gotchas:["Optimized DB access is faster but no absolute addressing","Non-retain DB values lost on power cycle","Instance DBs auto-generated for FBs"],related:["FB Instance","Optimized access","Retain"]}}]},control:{title:"Control Flow",icon:"◇",items:[{id:"if-else",cmd:"IF / ELSIF / ELSE",desc:"Conditional branching",difficulty:"beginner",version:"TIA",example:"IF rTemperature > 100.0 THEN\n  bAlarm := TRUE;\n  nState := 3;\nELSIF rTemperature > 80.0 THEN\n  bWarning := TRUE;\n  nState := 2;\nELSE\n  bAlarm := FALSE;\n  bWarning := FALSE;\n  nState := 1;\nEND_IF;",detail:{what:"Execute code conditionally based on boolean expressions.",why:"Fundamental control structure for decision making in logic.",how:"Condition evaluated top to bottom. First TRUE branch executes, rest skipped.",examples:[{code:"IF bStart THEN ... END_IF;",note:"Simple if"},{code:"IF a AND b THEN",note:"Combined conditions"},{code:"IF NOT bFault THEN",note:"Negation"}],gotchas:["Don't forget END_IF semicolon","ELSIF not ELSEIF","Use CASE for many discrete values"],related:["CASE","Boolean operators","Comparison"]}},{id:"case-of",cmd:"CASE / OF",desc:"Multi-way branching",difficulty:"beginner",version:"TIA",example:"CASE nState OF\n  0:  // Idle\n    bMotor := FALSE;\n    IF bStart THEN nState := 1; END_IF;\n  \n  1:  // Starting\n    bMotor := TRUE;\n    IF bRunning THEN nState := 2; END_IF;\n  \n  2:  // Running\n    IF bStop THEN nState := 3; END_IF;\n  \n  3:  // Stopping\n    bMotor := FALSE;\n    nState := 0;\n  \n  ELSE  // Error\n    bFault := TRUE;\nEND_CASE;",detail:{what:"Select code path based on integer value. Cleaner than multiple IF-ELSIF for state machines.",why:"State machines, mode selection, command parsing. More readable than nested IFs.",how:"Expression evaluated once, matching case executes. ELSE catches unmatched values.",examples:[{code:"CASE nMode OF 1: ... 2: ... END_CASE;",note:"Basic"},{code:"1, 2, 3:",note:"Multiple values"},{code:"10..20:",note:"Range (TIA v15+)"}],gotchas:["Only integer types (INT, DINT, etc.)","No fall-through like C switch","ELSE is optional but recommended"],related:["IF-ELSE","State machine","ENUM"],interview:true}},{id:"for-loop",cmd:"FOR / TO / BY",desc:"Counted loop iteration",difficulty:"beginner",version:"TIA",example:"// Sum array values\nrSum := 0.0;\nFOR i := 0 TO 9 DO\n  rSum := rSum + aValues[i];\nEND_FOR;\n\n// Count down by 2\nFOR j := 10 TO 0 BY -2 DO\n  aReverse[j] := nValue;\nEND_FOR;",detail:{what:"Loop a fixed number of times with automatic counter increment.",why:"Process arrays, repeat operations, initialization sequences.",how:"Counter increments (or decrements with BY) each iteration until limit reached.",examples:[{code:"FOR i := 1 TO 10 DO",note:"Count 1 to 10"},{code:"FOR i := 10 TO 1 BY -1 DO",note:"Count down"},{code:"FOR i := 0 TO 100 BY 10 DO",note:"Step by 10"}],gotchas:["Loop count determined at entry - don't modify bounds inside","Counter variable persists after loop","Avoid infinite loops - watchdog will trigger"],related:["WHILE","REPEAT","EXIT","CONTINUE"]}},{id:"while-repeat",cmd:"WHILE / REPEAT",desc:"Conditional loops",difficulty:"beginner",version:"TIA",example:"// WHILE - check before\nWHILE bSearching AND i < 100 DO\n  IF aBuffer[i] = nTarget THEN\n    bFound := TRUE;\n    bSearching := FALSE;\n  END_IF;\n  i := i + 1;\nEND_WHILE;\n\n// REPEAT - check after (runs at least once)\nREPEAT\n  nAttempts := nAttempts + 1;\n  bSuccess := FC_TryConnect();\nUNTIL bSuccess OR nAttempts >= 3\nEND_REPEAT;",detail:{what:"Loop while condition is true. WHILE checks first, REPEAT checks after.",why:"Loop when count isn't known in advance. Search, retry, wait operations.",how:"WHILE may not execute at all. REPEAT always executes at least once.",examples:[{code:"WHILE bActive DO ... END_WHILE;",note:"Pre-check"},{code:"REPEAT ... UNTIL bDone END_REPEAT;",note:"Post-check"}],gotchas:["Must ensure termination condition","Long loops increase scan time","Consider breaking across scans"],related:["FOR","EXIT","Scan time"]}}]},timers:{title:"Timers & Counters",icon:"⏱",items:[{id:"ton-timer",cmd:"TON (On-Delay Timer)",desc:"Delay turning on",difficulty:"beginner",version:"TIA",example:"VAR\n  tonStartDelay : TON;\nEND_VAR\n\ntonStartDelay(IN := bStartCmd,\n              PT := T#5S);\n\nbMotorStart := tonStartDelay.Q;\ntElapsed := tonStartDelay.ET;",detail:{what:"Output turns ON after input has been ON for preset time. Resets when input goes OFF.",why:"Debounce inputs, startup delays, timeout detection, minimum on-time.",how:"IN starts timing when TRUE. Q goes TRUE after PT elapsed. ET shows elapsed time.",examples:[{code:"tonDelay(IN := bInput, PT := T#2S);",note:"Basic call"},{code:"bOutput := tonDelay.Q;",note:"Delayed output"},{code:"tonDelay.ET",note:"Elapsed time"}],gotchas:["Must call every scan to update","ET resets to 0 when IN goes FALSE","Use TOF for off-delay"],related:["TOF","TP","TONR"]}},{id:"tof-timer",cmd:"TOF (Off-Delay Timer)",desc:"Delay turning off",difficulty:"beginner",version:"TIA",example:"VAR\n  tofCooldown : TOF;\nEND_VAR\n\ntofCooldown(IN := bPumpRunning,\n            PT := T#30S);\n\nbFanRunning := tofCooldown.Q;",detail:{what:"Output turns OFF after input has been OFF for preset time. ON immediately when input ON.",why:"Cooldown periods, run-on timers, anti-short-cycle protection.",how:"Q follows IN going high immediately. When IN goes low, Q stays high for PT duration.",examples:[{code:"tofRunOn(IN := bMotor, PT := T#10S);",note:"10s run-on"},{code:"bCooling := tofRunOn.Q;",note:"Extended output"}],gotchas:["Q goes TRUE immediately when IN goes TRUE","Timer only active when IN is FALSE","ET counts while IN is FALSE"],related:["TON","TP","Motor cooling"]}},{id:"ctu-counter",cmd:"CTU / CTD / CTUD",desc:"Up, down, and up/down counters",difficulty:"beginner",version:"TIA",example:"VAR\n  ctuParts : CTU;\nEND_VAR\n\nctuParts(CU := bPartDetected,\n         R := bReset,\n         PV := 100);\n\nbBatchComplete := ctuParts.Q;\nnPartsCount := ctuParts.CV;",detail:{what:"Count pulses up (CTU), down (CTD), or both (CTUD). Compare against preset.",why:"Batch counting, production tracking, event counting, position feedback.",how:"CU/CD count on rising edge. R/LD reset/load. Q outputs based on CV vs PV comparison.",examples:[{code:"ctuCount(CU := bPulse, R := bReset, PV := 50);",note:"Count to 50"},{code:"ctuCount.CV",note:"Current count"},{code:"ctuCount.Q",note:"TRUE when CV >= PV"}],gotchas:["Edge-triggered - needs transition to count","CV can exceed PV (doesn't stop)","CTUD has both QU (up) and QD (down) outputs"],related:["High-speed counter","Encoder","Batch"]}}]},operators:{title:"Operators & Expressions",icon:"±",items:[{id:"comparison-ops",cmd:"= <> < > <= >=",desc:"Comparison operators",difficulty:"beginner",version:"TIA",example:"IF rTemp >= rSetpoint THEN\n  bHeating := FALSE;\nEND_IF;\n\nIF nErrorCode <> 0 THEN\n  bFault := TRUE;\nEND_IF;\n\nbInRange := (rValue >= rMin) AND (rValue <= rMax);",detail:{what:"Compare values and return BOOL result. Used in conditions.",why:"Decision making, range checking, equality testing.",how:"Binary operators return TRUE or FALSE based on comparison.",examples:[{code:"a = b",note:"Equal to"},{code:"a <> b",note:"Not equal to"},{code:"a >= b",note:"Greater or equal"}],gotchas:["= is comparison, := is assignment","Don't compare REAL with = (use tolerance)","<> means 'not equal' (not !=)"],related:["Boolean operators","Assignment","IF"]}},{id:"boolean-ops",cmd:"AND OR XOR NOT",desc:"Boolean logic operators",difficulty:"beginner",version:"TIA",example:"bStart := bEnable AND bReady AND NOT bFault;\n\nbAlarm := bOverTemp OR bOverPressure OR bOverCurrent;\n\nbToggle := bOldState XOR bNewState;",detail:{what:"Combine boolean values. AND (all true), OR (any true), XOR (different), NOT (invert).",why:"Combine conditions, build interlocks, create logic expressions.",how:"Evaluated left to right with precedence: NOT > AND > XOR > OR.",examples:[{code:"a AND b",note:"Both true"},{code:"a OR b",note:"Either true"},{code:"NOT a",note:"Inverted"},{code:"a XOR b",note:"Exactly one true"}],gotchas:["Use parentheses for clarity","AND has higher precedence than OR","& and | also work for AND/OR"],related:["Comparison","Bit operations","Ladder logic"]}},{id:"math-ops",cmd:"+ - * / MOD",desc:"Arithmetic operators",difficulty:"beginner",version:"TIA",example:"rAverage := rSum / INT_TO_REAL(nCount);\n\nnRemainder := nTotal MOD 10;\n\nrScaled := (rRaw - rMin) * rScale + rOffset;",detail:{what:"Mathematical operations on numeric values.",why:"Calculations, scaling, unit conversion, averaging.",how:"Standard math operators. Result type depends on operand types.",examples:[{code:"a + b",note:"Addition"},{code:"a - b",note:"Subtraction"},{code:"a * b",note:"Multiplication"},{code:"a / b",note:"Division"},{code:"a MOD b",note:"Modulo (remainder)"}],gotchas:["INT / INT gives INT (truncated)","Use REAL for decimal results","DIV by zero causes CPU error"],related:["Type conversion","ABS","SQRT","Scaling"]}}]},conversion:{title:"Type Conversion",icon:"⇄",items:[{id:"type-convert",cmd:"INT_TO_REAL, REAL_TO_INT",desc:"Explicit type conversion",difficulty:"beginner",version:"TIA",example:"rValue := INT_TO_REAL(nRawValue);\nnRounded := REAL_TO_INT(rCalculated);\n\nwLowWord := DINT_TO_WORD(diValue);\ndiCombined := WORD_TO_DINT(wHigh) * 65536\n  + WORD_TO_DINT(wLow);",detail:{what:"Convert between data types explicitly. Format: SOURCE_TO_TARGET(value).",why:"Mix types in calculations, scale analog values, extract/combine words.",how:"Built-in conversion functions. Some conversions may lose precision.",examples:[{code:"INT_TO_REAL(nValue)",note:"Integer to float"},{code:"REAL_TO_INT(rValue)",note:"Float to integer (rounds)"},{code:"DINT_TO_WORD(diVal)",note:"Truncates to low word"},{code:"BOOL_TO_INT(bFlag)",note:"FALSE=0, TRUE=1"}],gotchas:["REAL_TO_INT rounds, doesn't truncate","Large DINT to INT can overflow","Use TRUNC() for truncation"],related:["TRUNC","ROUND","Scaling"]}}]}},
+comparisons:[
+{id:"fb-vs-fc",title:"FB vs FC",description:"When to use each block type",headers:["Aspect","FB (Function Block)","FC (Function)"],rows:[["Memory","Has instance DB","No memory"],["State","Retains between calls","Stateless"],["Timers/Counters","Can include","Cannot include"],["Use case","Motor, valve, PID","Calculations, scaling"],["Overhead","More memory","Less memory"]],recommendation:"Use FC for pure calculations. Use FB when you need state retention (timers, edge detection, etc.).",example:"// FC - Stateless calculation\nrScaled := FC_Scale(nRaw, 0.0, 100.0);\n\n// FB - Stateful control\nfb_Motor(bStart := bCmd);\nbRunning := fb_Motor.bIsRunning;"},
+{id:"ton-vs-tof",title:"TON vs TOF vs TP",description:"Timer type comparison",headers:["Type","Behavior","Use Case"],rows:[["TON","Delay ON","Debounce, timeout, startup delay"],["TOF","Delay OFF","Cooldown, run-on, anti-short-cycle"],["TP","Pulse (fixed duration)","One-shot, minimum pulse width"]],recommendation:"TON is most common. Use TOF for extending outputs. TP for fixed-duration pulses.",example:"// TON: Output after 5s of input\ntonDelay(IN := bSensor, PT := T#5S);\n\n// TOF: Output stays 10s after input\ntofRunOn(IN := bMotor, PT := T#10S);"},
+{id:"global-vs-instance",title:"Global DB vs Instance DB",description:"Data block types",headers:["Aspect","Global DB","Instance DB"],rows:[["Purpose","Shared data","FB private data"],["Access","Anywhere","Via FB instance"],["Created","Manually","Auto for each FB call"],["Naming","DB_Name.Variable","fb_Instance.Variable"]],recommendation:"Use Global DB for recipes, parameters, HMI data. Instance DB is automatic for FBs.",example:"// Global DB\nDB_Recipe.rTemperature := 150.0;\n\n// Instance DB (via FB)\nfb_Motor.rSpeed := 1500.0;"},
+{id:"s7-1200-vs-1500",title:"S7-1200 vs S7-1500",description:"CPU differences affecting SCL",headers:["Feature","S7-1200","S7-1500"],rows:[["Max code size","Smaller","Larger"],["LREAL support","Limited","Full"],["Optimized DB","Yes","Yes (faster)"],["VARIANT type","No","Yes"],["REF_TO","Limited","Full"]],recommendation:"S7-1500 for complex projects. S7-1200 for cost-sensitive or simpler applications.",example:"// S7-1500 only\nVAR myRef : REF_TO INT; END_VAR\nmyRef := REF(nValue);"},
+{id:"optimized-vs-standard",title:"Optimized vs Standard DB",description:"Data block access modes",headers:["Aspect","Optimized","Standard"],rows:[["Performance","Faster","Slower"],["Absolute addr","Not allowed","Allowed"],["Memory layout","Automatic","Sequential"],["HMI access","Symbolic only","Both"]],recommendation:"Use Optimized for new projects. Standard only when absolute addressing required.",example:"// Optimized (preferred)\nDB_Data.rValue := 1.0;\n\n// Standard (legacy)\nDB10.DBD0 := 1.0;  // Avoid!"}
+],
+antiPatterns:[
+{id:"ap1",title:"Comparing REAL with =",bad:"IF rTemperature = 100.0 THEN\n  // May never be TRUE!\nEND_IF;",good:"IF ABS(rTemperature - 100.0) < 0.01 THEN\n  // Use tolerance\nEND_IF;",explanation:"REAL values have floating-point precision issues. Always compare with a tolerance.",severity:"high"},
+{id:"ap2",title:"Blocking the Scan Cycle",bad:"WHILE NOT bSensorReached DO\n  // Wait forever...\n  // Scan cycle blocked!\nEND_WHILE;",good:"IF bSensorReached THEN\n  nState := 2;\nEND_IF;\n// Let scan continue, check next cycle",explanation:"Never wait in a loop. Let the scan cycle run and check conditions each scan.",severity:"high"},
+{id:"ap3",title:"Using Absolute Addresses",bad:"M10.0 := TRUE;  // Magic address\nMW20 := 100;    // What is this?",good:'bMotorRunning := TRUE;  // Symbolic\nnSetpoint := 100;       // Clear name',explanation:"Always use symbolic names. Absolute addresses are hard to maintain and debug.",severity:"medium"},
+{id:"ap4",title:"FB Outputs Without Calling FB",bad:"// Using output without calling FB first\nbDone := fb_Motor.bComplete;",good:"// Always call FB first each scan\nfb_Motor(bStart := bCmd);\nbDone := fb_Motor.bComplete;",explanation:"FB must be called every scan to update its outputs. Timers won't work otherwise.",severity:"high"},
+{id:"ap5",title:"Edge Detection in FC",bad:"FUNCTION FC_EdgeDetect\n// Cannot remember last state in FC!\nbRisingEdge := bInput AND NOT bLastState;\nbLastState := bInput;  // Lost next call",good:"FUNCTION_BLOCK FB_EdgeDetect\nVAR\n  bLastState : BOOL;\nEND_VAR\nbRisingEdge := bInput AND NOT bLastState;\nbLastState := bInput;",explanation:"FCs are stateless - use FB for anything that needs memory between calls.",severity:"medium"},
+{id:"ap6",title:"Magic Numbers",bad:"IF nLevel > 27648 THEN  // What is 27648?\n  bOverflow := TRUE;\nEND_IF;\ntDelay := T#3500MS;  // Why 3.5s?",good:"VAR CONSTANT\n  ANALOG_MAX : INT := 27648;\n  STARTUP_DELAY : TIME := T#3500MS;\nEND_VAR\nIF nLevel > ANALOG_MAX THEN ...",explanation:"Named constants make code self-documenting and easier to maintain.",severity:"medium"},
+{id:"ap7",title:"Missing ELSE in State Machine",bad:"CASE nState OF\n  0: nState := 1;\n  1: nState := 2;\n  2: nState := 0;\nEND_CASE;\n// What if nState = 99?",good:"CASE nState OF\n  0: nState := 1;\n  1: nState := 2;\n  2: nState := 0;\n  ELSE\n    nState := 0;\n    bFault := TRUE;\nEND_CASE;",explanation:"Always handle unexpected states. Corruption or bugs can cause invalid values.",severity:"high"}
+],
+patterns:[
+{id:"p1",title:"Motor Start/Stop",description:"Basic motor control with interlocks and feedback",category:"Equipment",code:"// FB_Motor - Basic motor control\nVAR_INPUT\n  bStart : BOOL;\n  bStop : BOOL;\n  bFeedback : BOOL;\n  tStartTimeout : TIME := T#5S;\nEND_VAR\nVAR_OUTPUT\n  bRunCmd : BOOL;\n  bRunning : BOOL;\n  bFault : BOOL;\nEND_VAR\nVAR\n  bLatched : BOOL;\n  tonStart : TON;\nEND_VAR\n\n// Start/Stop latch\nIF bStart AND NOT bFault THEN\n  bLatched := TRUE;\nEND_IF;\nIF bStop OR bFault THEN\n  bLatched := FALSE;\nEND_IF;\n\nbRunCmd := bLatched;\nbRunning := bFeedback;\n\n// Start timeout detection\ntonStart(IN := bRunCmd AND NOT bRunning,\n         PT := tStartTimeout);\nIF tonStart.Q THEN\n  bFault := TRUE;\n  bLatched := FALSE;\nEND_IF;",usage:"fb_Motor(bStart := bHMI_Start, bStop := bHMI_Stop OR bEStop, bFeedback := bMotor_Aux);"},
+{id:"p2",title:"Valve Control",description:"Solenoid or actuated valve with position feedback",category:"Equipment",code:"// FB_Valve - Valve with feedback\nVAR_INPUT\n  bOpen : BOOL;\n  bOpenFB : BOOL;\n  bClosedFB : BOOL;\n  tTravelTime : TIME := T#10S;\nEND_VAR\nVAR_OUTPUT\n  bOpenCmd : BOOL;\n  bIsOpen : BOOL;\n  bIsClosed : BOOL;\n  bFault : BOOL;\nEND_VAR\nVAR\n  tonTravel : TON;\n  bInTransit : BOOL;\nEND_VAR\n\nbOpenCmd := bOpen AND NOT bFault;\nbIsOpen := bOpenFB;\nbIsClosed := bClosedFB;\n\nbInTransit := NOT bOpenFB AND NOT bClosedFB;\ntonTravel(IN := bInTransit, PT := tTravelTime);\nbFault := tonTravel.Q OR (bOpenFB AND bClosedFB);",usage:"fb_Valve(bOpen := bCmd, bOpenFB := bLS_Open, bClosedFB := bLS_Closed);"},
+{id:"p3",title:"Analog Scaling",description:"Scale raw analog input to engineering units",category:"Utility",code:"// FC_ScaleAnalog\nFUNCTION FC_ScaleAnalog : REAL\nVAR_INPUT\n  nRaw : INT;         // 0-27648\n  rEngMin : REAL;\n  rEngMax : REAL;\n  bClamp : BOOL := TRUE;\nEND_VAR\nVAR_TEMP\n  rScaled : REAL;\nEND_VAR\n\nrScaled := (INT_TO_REAL(nRaw) / 27648.0)\n  * (rEngMax - rEngMin) + rEngMin;\n\nIF bClamp THEN\n  IF rScaled < rEngMin THEN\n    rScaled := rEngMin;\n  END_IF;\n  IF rScaled > rEngMax THEN\n    rScaled := rEngMax;\n  END_IF;\nEND_IF;\n\nFC_ScaleAnalog := rScaled;",usage:"rTemp := FC_ScaleAnalog(nRaw := IW64, rEngMin := 0.0, rEngMax := 100.0);"},
+{id:"p4",title:"State Machine",description:"Template for sequential control",category:"Control",code:"VAR\n  nState : INT := 0;\n  nNextState : INT;\n  tonStep : TON;\nEND_VAR\n\nCASE nState OF\n  0:  // IDLE\n    bOutput1 := FALSE;\n    bOutput2 := FALSE;\n    IF bStart AND NOT bFault THEN\n      nNextState := 10;\n    END_IF;\n\n  10: // STEP 1 - Start pump\n    bOutput1 := TRUE;\n    tonStep(IN := TRUE, PT := T#2S);\n    IF tonStep.Q THEN\n      nNextState := 20;\n    END_IF;\n\n  20: // STEP 2 - Open valve\n    bOutput2 := TRUE;\n    IF bSensor1 THEN\n      nNextState := 30;\n    END_IF;\n\n  30: // COMPLETE\n    IF bReset THEN\n      nNextState := 0;\n    END_IF;\n\n  ELSE\n    bFault := TRUE;\n    nNextState := 0;\nEND_CASE;\n\nIF nState <> nNextState THEN\n  tonStep(IN := FALSE);\n  nState := nNextState;\nEND_IF;",usage:"Use 10, 20, 30... for states (allows inserting states later)"},
+{id:"p5",title:"Alarm Handler",description:"Basic alarm with acknowledge and auto-reset",category:"HMI",code:"// FB_Alarm\nVAR_INPUT\n  bCondition : BOOL;\n  bAck : BOOL;\n  bAutoReset : BOOL := TRUE;\nEND_VAR\nVAR_OUTPUT\n  bActive : BOOL;\n  bUnacked : BOOL;\n  bAcked : BOOL;\nEND_VAR\n\nbActive := bCondition;\n\nIF bCondition AND NOT bAcked THEN\n  bUnacked := TRUE;\nEND_IF;\n\nIF bAck AND bUnacked THEN\n  bUnacked := FALSE;\n  bAcked := TRUE;\nEND_IF;\n\nIF bAutoReset AND NOT bCondition THEN\n  bAcked := FALSE;\nEND_IF;",usage:"fb_HighTemp(bCondition := rTemp > 100.0, bAck := bHMI_AckAll);"}
+],
+learningPaths:{
+beginner:{title:"New to SCL",description:"Start with the fundamentals",items:["elementary-types","var-sections","if-else","for-loop","ton-timer"]},
+fromLadder:{title:"Coming from Ladder Logic",description:"Transition from LAD to SCL",items:["elementary-types","if-else","ton-timer","case-of","fb-blocks"],tips:["IF-THEN replaces contact/coil logic","FOR loops replace multiple rungs","TON/TOF work the same way","FBs are like AOIs with instances","Use SCL for calculations, LAD for simple I/O"]},
+intermediate:{title:"Level Up Your SCL",description:"Advanced patterns and practices",items:["complex-types","fb-blocks","case-of","type-convert","db-blocks"]},
+hmiDev:{title:"For HMI Developers",description:"What you need to know for HMI integration",items:["elementary-types","complex-types","db-blocks","var-sections"],tips:["Use Global DBs for HMI data exchange","Optimized DBs require symbolic access only","Group HMI variables in dedicated UDTs","Consider alarm structures for faceplates"]}
+},
+standards:{naming:{title:"Naming Conventions",items:[{pattern:"bVariableName",usage:"BOOL variables",example:"bMotorRunning, bAlarm"},{pattern:"nVariableName",usage:"INT/DINT variables",example:"nCounter, nState"},{pattern:"rVariableName",usage:"REAL variables",example:"rTemperature, rSetpoint"},{pattern:"sVariableName",usage:"STRING variables",example:"sRecipeName, sMessage"},{pattern:"tVariableName",usage:"TIME variables",example:"tDelay, tTimeout"},{pattern:"aArrayName",usage:"Arrays",example:"aMotors, aRecipeValues"},{pattern:"stStructName",usage:"Structs/UDTs",example:"stMotorData, stRecipe"},{pattern:"FB_BlockName",usage:"Function Blocks",example:"FB_Motor, FB_Valve"},{pattern:"FC_FunctionName",usage:"Functions",example:"FC_Scale, FC_Calculate"},{pattern:"DB_DataName",usage:"Data Blocks",example:"DB_Recipe, DB_Params"}]},bestPractices:{title:"Best Practices",items:[{practice:"Use symbolic addressing",instead:"Absolute addresses (M, MW)",because:"Maintainability and clarity"},{practice:"Call FBs every scan",instead:"Skipping FB calls",because:"Timers and edge detection need continuous updates"},{practice:"Compare REAL with tolerance",instead:"Direct = comparison",because:"Floating point precision issues"},{practice:"Use CASE for state machines",instead:"Nested IF-ELSIF chains",because:"Cleaner, easier to maintain"},{practice:"Initialize all variables",instead:"Relying on defaults",because:"Explicit behavior, avoid surprises"}]}}
+};
+
+// === STATE ===
+let S={tab:'quickRef',cat:'variables',search:'',selected:null,copied:null,dark:true,bookmarks:[],showBm:false,activePath:null};
+const $=id=>document.getElementById(id);
+const h=(tag,cls,html)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(html!==undefined)e.innerHTML=html;return e};
+
+function findItem(id){for(const c of Object.values(D.quickRef)){const it=c.items.find(i=>i.id===id);if(it)return it;}return null;}
+
+function copyText(text,id){navigator.clipboard.writeText(text).then(()=>{S.copied=id;render();setTimeout(()=>{S.copied=null;render();},1500);});}
+
+function escapeHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+// === RENDER ===
+function render(){
+  const app=$('app');
+  document.body.className=S.dark?'':'light';
+  let html='';
+  // Header
+  html+=`<header>
+  <div class="hdr-top">
+    <div class="logo"><div class="logo-box">SCL</div><div><h1>Siemens SCL Reference</h1><span>TIA Portal • Structured Control Language</span></div></div>
+    <div class="ctrls">
+      <input class="search" type="text" placeholder="Search..." value="${escapeHtml(S.search)}" oninput="S.search=this.value;S.showBm=false;render()">
+      <button class="btn ${S.showBm?'active':''}" onclick="S.showBm=!S.showBm;S.search='';render()">★ ${S.bookmarks.length}</button>
+      <button class="btn" onclick="S.dark=!S.dark;render()">${S.dark?'☀':'☾'}</button>
+    </div>
+  </div>
+  <div class="tabs">
+    ${[['quickRef','Quick Reference'],['patterns','📋 Patterns'],['comparisons','Comparisons'],['antiPatterns','Anti-Patterns'],['learningPaths','Learning Paths'],['standards','Standards']].map(([id,l])=>`<button class="tab ${S.tab===id?'active':''}" onclick="S.tab='${id}';S.showBm=false;S.search='';render()">${l}</button>`).join('')}
+  </div>
+  ${S.tab==='quickRef'&&!S.search&&!S.showBm?`<div class="cats">${Object.entries(D.quickRef).map(([k,v])=>`<button class="cat ${S.cat===k?'active':''}" onclick="S.cat='${k}';render()">${v.icon} ${v.title}</button>`).join('')}</div>`:''}
+  </header>`;
+
+  html+='<main>';
+
+  if(S.tab==='quickRef'){
+    const items=getFilteredItems();
+    if(items){
+      html+=`<div class="section-hdr"><span style="font-size:18px;color:var(--ac)">${S.showBm?'★':'⌕'}</span><h2>${S.showBm?'Bookmarks':'Search Results'}</h2><span class="count">${items.length} items</span></div>`;
+      if(items.length)html+=`<div class="grid">${items.map(i=>cardHtml(i,true)).join('')}</div>`;
+      else html+=`<div style="text-align:center;padding:40px;color:var(--t3)">${S.showBm?'No bookmarks yet':'No results found'}</div>`;
+    }else{
+      const cat=D.quickRef[S.cat];
+      html+=`<div class="section-hdr"><span style="font-size:18px;color:var(--ac)">${cat.icon}</span><h2>${cat.title}</h2><span class="count">${cat.items.length} items</span></div>`;
+      html+=`<div class="grid">${cat.items.map(i=>cardHtml(i,false)).join('')}</div>`;
+    }
+  }else if(S.tab==='patterns'){html+=patternsHtml();}
+  else if(S.tab==='comparisons'){html+=comparisonsHtml();}
+  else if(S.tab==='antiPatterns'){html+=antiPatternsHtml();}
+  else if(S.tab==='learningPaths'){html+=learningPathsHtml();}
+  else if(S.tab==='standards'){html+=standardsHtml();}
+
+  html+='</main>';
+  html+=`<footer><p>Built by <a href="https://ssautomation.com">SS Automation &amp; Controls</a> • Part of the CheatSheet Suite</p></footer>`;
+
+  if(S.selected){html+=panelHtml(S.selected);}
+
+  app.innerHTML=html;
+}
+
+function getFilteredItems(){
+  if(!S.search.trim()&&!S.showBm)return null;
+  const q=S.search.toLowerCase();
+  const r=[];
+  Object.entries(D.quickRef).forEach(([k,cat])=>{
+    cat.items.forEach(item=>{
+      const ms=!q||item.cmd.toLowerCase().includes(q)||item.desc.toLowerCase().includes(q);
+      const mb=!S.showBm||S.bookmarks.includes(item.id);
+      if(ms&&mb)r.push({...item,categoryTitle:cat.title});
+    });
+  });
+  return r;
+}
+
+function cardHtml(item,showCat){
+  const bm=S.bookmarks.includes(item.id);
+  return `<div class="card" onclick="openDetail('${item.id}')">
+    <div class="card-top"><div><span class="badge ${item.difficulty}">${item.difficulty}</span> <span class="badge ver">${item.version}</span></div><button class="bm-btn ${bm?'active':''}" onclick="event.stopPropagation();toggleBm('${item.id}')">${bm?'★':'☆'}</button></div>
+    <div class="cmd-row"><code class="cmd">${escapeHtml(item.cmd)}</code><button class="copy-btn ${S.copied===item.id?'copied':''}" onclick="event.stopPropagation();copyText(\`${item.cmd.replace(/`/g,'\\`')}\`,'${item.id}')">${S.copied===item.id?'✓':'⧉'}</button></div>
+    ${showCat?`<span class="cat-label">${item.categoryTitle}</span>`:''}
+    <p>${item.desc}</p>
+    <pre>${escapeHtml(item.example)}</pre>
+  </div>`;
+}
+
+function panelHtml(item){
+  return `<div class="overlay" onclick="S.selected=null;render()">
+  <div class="panel" onclick="event.stopPropagation()">
+    <button class="panel-close" onclick="S.selected=null;render()">×</button>
+    <div style="margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid var(--bd)">
+      <div style="display:flex;gap:8px;margin-bottom:14px"><span class="badge ${item.difficulty}">${item.difficulty}</span><span class="badge ver">${item.version}</span>${item.interview?'<span class="badge" style="background:rgba(147,51,234,.15);color:#a855f7">💼 Interview</span>':''}</div>
+      <code style="font-family:monospace;font-size:18px;font-weight:700;color:var(--ac);background:var(--code);padding:12px 16px;border-radius:8px;display:inline-block;margin-bottom:10px">${escapeHtml(item.cmd)}</code>
+      <p style="font-size:14px;color:var(--t2)">${item.desc}</p>
+    </div>
+    <div style="margin-bottom:20px"><h3 class="sec">What it does</h3><p style="color:var(--t1);line-height:1.6;font-size:13px">${item.detail.what}</p></div>
+    <div style="margin-bottom:20px"><h3 class="sec">Why use it</h3><p style="color:var(--t1);line-height:1.6;font-size:13px">${item.detail.why}</p></div>
+    <div style="margin-bottom:20px"><h3 class="sec">How it works</h3><p style="color:var(--t1);line-height:1.6;font-size:13px">${item.detail.how}</p></div>
+    <div style="margin-bottom:20px"><h3 class="sec">Examples</h3>${item.detail.examples.map(ex=>`<div class="ex-row"><code>${escapeHtml(ex.code)}</code><span>${ex.note}</span></div>`).join('')}</div>
+    <div style="margin-bottom:20px"><h3 class="sec">Gotchas</h3>${item.detail.gotchas.map(g=>`<div class="gotcha">${g}</div>`).join('')}</div>
+    <div><h3 class="sec">Related</h3>${item.detail.related.map(r=>`<span class="rel-tag">${r}</span>`).join('')}</div>
+  </div></div>`;
+}
+
+function comparisonsHtml(){
+  return D.comparisons.map(c=>`<div class="comp-card">
+    <h3>${c.title}</h3><p style="color:var(--t2);font-size:13px;margin-bottom:16px">${c.description}</p>
+    <div class="comp-tbl">
+      <div class="comp-hdr" style="grid-template-columns:repeat(${c.headers.length},1fr)">${c.headers.map(h=>`<span>${h}</span>`).join('')}</div>
+      ${c.rows.map(r=>`<div class="comp-row" style="grid-template-columns:repeat(${r.length},1fr)">${r.map(cell=>`<span>${cell}</span>`).join('')}</div>`).join('')}
+    </div>
+    <div class="tip-box"><strong>💡</strong> ${c.recommendation}</div>
+    <pre>${escapeHtml(c.example)}</pre>
+  </div>`).join('');
+}
+
+function antiPatternsHtml(){
+  return D.antiPatterns.map(ap=>`<div class="ap-card ${ap.severity}">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px"><h3 style="font-size:16px">${ap.title}</h3><span class="sev ${ap.severity}">${ap.severity}</span></div>
+    <div class="ap-grid">
+      <div class="ap-block"><div class="ap-label bad">❌ Don't</div><pre style="padding:12px">${escapeHtml(ap.bad)}</pre></div>
+      <div class="ap-block"><div class="ap-label good">✅ Do</div><pre style="padding:12px">${escapeHtml(ap.good)}</pre></div>
+    </div>
+    <p style="color:var(--t2);font-size:13px">${ap.explanation}</p>
+  </div>`).join('');
+}
+
+function patternsHtml(){
+  let html='<div class="info-bar">📋 Copy-paste ready templates for common industrial automation tasks. Customize for your application.</div>';
+  html+=D.patterns.map(p=>`<div class="pat-card">
+    <div class="pat-hdr"><div><h3 style="font-size:18px;margin-bottom:4px">${p.title}</h3><p style="color:var(--t2);font-size:13px;margin:0">${p.description}</p></div><span class="pat-cat">${p.category}</span></div>
+    <div class="code-block">
+      <div class="code-top"><span>CODE</span><button class="btn" style="padding:2px 8px;font-size:10px" onclick="copyText(\`${p.code.replace(/`/g,'\\`').replace(/\\/g,'\\\\')}\`,'${p.id}')">${S.copied===p.id?'✓ Copied':'⧉ Copy'}</button></div>
+      <pre style="padding:14px;white-space:pre">${escapeHtml(p.code)}</pre>
+    </div>
+    <div class="usage-box"><span>USAGE</span><code>${escapeHtml(p.usage)}</code></div>
+  </div>`).join('');
+  return html;
+}
+
+function learningPathsHtml(){
+  return Object.entries(D.learningPaths).map(([key,path])=>{
+    const active=S.activePath===key;
+    let inner='';
+    if(active){
+      inner=`<div class="lp-expand">`;
+      if(path.tips)inner+=`<div class="tips-box"><h4>Key Tips</h4><ul>${path.tips.map(t=>`<li>${t}</li>`).join('')}</ul></div>`;
+      inner+=`<h4 style="font-size:12px;font-weight:600;margin-bottom:10px;color:var(--ac)">Topics to Study</h4>`;
+      path.items.forEach((id,i)=>{
+        const item=findItem(id);
+        if(item)inner+=`<button class="topic-btn" onclick="event.stopPropagation();openDetail('${id}')"><span class="topic-num">${i+1}</span>${escapeHtml(item.cmd)}</button>`;
+      });
+      inner+=`</div>`;
+    }
+    return `<div class="lp-card ${active?'active':''}" onclick="S.activePath=S.activePath==='${key}'?null:'${key}';render()">
+      <div class="lp-top"><h3>${path.title}</h3><span class="count">${path.items.length} topics</span></div>
+      <p style="color:var(--t2);font-size:13px">${path.description}</p>
+      ${inner}
+    </div>`;
+  }).join('');
+}
+
+function standardsHtml(){
+  let html=`<div><h2 style="font-size:18px;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--bd)">${D.standards.naming.title}</h2>
+  <div class="std-grid">${D.standards.naming.items.map(i=>`<div class="std-card"><code class="pat">${i.pattern}</code><p>${i.usage}</p><code class="ex">${i.example}</code></div>`).join('')}</div></div>`;
+  html+=`<div style="margin-top:32px"><h2 style="font-size:18px;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--bd)">${D.standards.bestPractices.title}</h2>
+  <div class="bp-grid">${D.standards.bestPractices.items.map(i=>`<div class="bp-card"><div class="bp-row"><span class="bp-do">✓ Do</span><span style="font-size:12px">${i.practice}</span></div><div class="bp-row"><span class="bp-not">✗ Not</span><span style="font-size:12px">${i.instead}</span></div><p style="color:var(--t3);font-size:11px;margin-top:8px;padding-top:8px;border-top:1px solid var(--bd)">${i.because}</p></div>`).join('')}</div></div>`;
+  return html;
+}
+
+// === GLOBAL FUNCTIONS ===
+window.openDetail=function(id){S.selected=findItem(id);render();};
+window.toggleBm=function(id){const i=S.bookmarks.indexOf(id);if(i>=0)S.bookmarks.splice(i,1);else S.bookmarks.push(id);render();};
+window.copyText=copyText;
+window.S=S;
+
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){S.selected=null;S.activePath=null;S.search='';render();}});
+
+render();
+</script>
+</body>
+</html>
